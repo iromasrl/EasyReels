@@ -1,0 +1,44 @@
+name: easy-reels-app
+region: fra
+services:
+- name: web
+  github:
+    repo: YOUR_GITHUB_USER/easy-reels
+    branch: main
+    deploy_on_push: true
+  source_dir: /
+  envs:
+  - key: NEXT_PUBLIC_SUPABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${NEXT_PUBLIC_SUPABASE_URL}
+  - key: SUPABASE_SERVICE_ROLE_KEY
+    scope: RUN_TIME
+    value: ${SUPABASE_SERVICE_ROLE_KEY}
+  http_port: 3000
+  run_command: npm start
+  build_command: npm run build
+
+workers:
+- name: worker
+  github:
+    repo: YOUR_GITHUB_USER/easy-reels
+    branch: main
+    deploy_on_push: true
+  source_dir: /
+  dockerfile_path: Dockerfile
+  envs:
+  - key: NEXT_PUBLIC_SUPABASE_URL
+    scope: RUN_TIME
+    value: ${NEXT_PUBLIC_SUPABASE_URL}
+  - key: SUPABASE_SERVICE_ROLE_KEY
+    scope: RUN_TIME
+    value: ${SUPABASE_SERVICE_ROLE_KEY}
+  - key: OPENAI_API_KEY
+    scope: RUN_TIME
+    value: ${OPENAI_API_KEY}
+  - key: REPLICATE_API_TOKEN
+    scope: RUN_TIME
+    value: ${REPLICATE_API_TOKEN}
+  - key: REDIS_URL
+    scope: RUN_TIME
+    value: ${REDIS_URL}
